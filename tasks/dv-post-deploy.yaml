@@ -39,6 +39,13 @@
   with_items:
     - org.glassfish.grizzly.http.server.util.RequestUtils=SEVERE
 
+- name: make sure firewall service is running on RedHat / CentOS 7
+  service:
+    name: firewalld
+    state: started
+  when: ansible_os_family == "RedHat" and
+        ansible_distribution_major_version == "7"
+
 - name: open firewall for https (443) and http (80) services on RedHat / CentOS 7
   firewalld: zone=public service={{item}} state=enabled immediate=yes permanent=yes
   with_items:
