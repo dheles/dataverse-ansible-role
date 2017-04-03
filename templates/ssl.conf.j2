@@ -20,21 +20,12 @@ SSLCryptoDevice builtin
   SSLEngine on
   SSLProtocol all -SSLv2
   SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
-  #SSLCertificateFile /etc/pki/tls/certs/localhost.crt
-  #SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
 
-  {% set cert_basename = 'star_' + http_server.name.split('.')[-3:] | join('.') -%}
-  # Certificates: {{ cert_basename }}
-  SSLCertificateFile      {{ httpd_cert_basedir }}/certs/{{ cert_basename }}.crt
-  SSLCertificateKeyFile   {{ httpd_cert_basedir }}/private/{{ cert_basename }}.key
-  SSLCertificateChainFile {{ httpd_cert_basedir }}/certs/{{ cert_basename }}_interim.crt
-  {% for alias in http_server.aliases -%}
-  {% set cert_basename = 'star_' + alias.split('.')[-3:] | join('.') -%}
-  # Certificates: {{ cert_basename }}
-  # SSLCertificateFile      {{ httpd_cert_basedir }}/certs/{{ cert_basename }}.crt
-  # SSLCertificateKeyFile   {{ httpd_cert_basedir }}/private/{{ cert_basename }}.key
-  # SSLCertificateChainFile {{ httpd_cert_basedir }}/certs/{{ cert_basename }}_interim.crt
-  {% endfor -%}
+  SSLCertificateFile {{ ssl_certificate_path }}/{{ ssl_certificate_file }}
+  SSLCertificateKeyFile {{ ssl_certificate_key_path }}/{{ ssl_certificate_key_file }}
+  {% if ssl_certificate_chain_file | default(false) %}
+  SSLCertificateChainFile {{ ssl_certificate_path }}/{{ ssl_certificate_chain_file }}
+  {% endif %}
 
   <Files ~ "\.(cgi|shtml|phtml|php3?)$">
     SSLOptions +StdEnvVars
