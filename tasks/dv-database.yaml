@@ -26,16 +26,17 @@
   register: command_result
   # commenting out failed_when / adding ignore_errors: True due to bug in ansible 2 failed when
   # failure is handled in next task
-  ignore_errors: True
-  #failed_when:
-  #  - "command_result.rc !=0"
-  #  - "'Data directory is not empty!' not in command_result.stdout"
+  ignore_errors: false
+  failed_when:
+   - "command_result.rc !=0"
+   - "'Data directory is not empty!' not in command_result.stdout"
 
-- name: temporarily handle pg initdb failure conditions
-  fail: msg="{{ db_rpm_setup_command }} --> failed".
-  when: ansible_os_family == "RedHat" and
-        ansible_distribution_major_version == "7"
-        and 'Data directory is not empty!' not in command_result.stdout
+# TODO: remove when sure the workaround is no longer needed
+# - name: temporarily handle pg initdb failure conditions
+#   fail: msg="{{ db_rpm_setup_command }} --> failed".
+#   when: ansible_os_family == "RedHat" and
+#         ansible_distribution_major_version == "7"
+#         and 'Data directory is not empty!' not in command_result.stdout
 
 - name: install pg_hba.conf on RedHat / CentOS 7.
   copy: src=pg_hba.conf dest="{{ db_rpm_data_dir }}"
