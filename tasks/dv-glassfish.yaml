@@ -78,9 +78,18 @@
   when: ansible_os_family == "RedHat" and
         ansible_distribution_major_version == "7"
 
+- name: check to see if "{{ dv_gf_domain }}" is already running
+  become: yes
+  become_user: "{{ dv_gf_user }}"
+  shell: "nohup {{ dv_gf_root }}/bin/asadmin list-domains"
+  register: domain_list
+  when: ansible_os_family == "RedHat" and
+        ansible_distribution_major_version == "7"
+
 - name: start glassfish with asadmin so subsequent Ansible-initiated restarts succeed on RedHat/CentOS
   become: yes
   become_user: "{{ dv_gf_user }}"
   shell: "nohup {{ dv_gf_root }}/bin/asadmin restart-domain"
-  when: ansible_os_family == "RedHat" and
-        ansible_distribution_major_version == "7"
+  when: "ansible_os_family == 'RedHat' and
+        ansible_distribution_major_version == '7' and
+        '{{ dv_gf_domain }} running' not in domain_list.stdout"
