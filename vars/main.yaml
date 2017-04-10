@@ -19,7 +19,7 @@
 
 
 # Could use inventory_hostname, ansible_fqdn, or ansible_nodename
-dataverse_service_name: "archive.data.jhu.edu"
+# dataverse_service_name: "archive.data.jhu.edu"
 dataverse_content_directory: "/mnt/dvn/dv-content"
 dataverse_service_email: "JHU Data Archive Support <jhuda-admin@dkc.jhu.edu>"
 dataverse_google_analytics_key: "{{ google_analytics_key_protected }}"
